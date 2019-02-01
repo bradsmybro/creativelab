@@ -1,0 +1,22 @@
+.trading_card {
+  margin: 15px 0px;
+}
+
+.trading_area {
+  height: 400px;
+  border-width: 3px !important;
+  color: black;
+}
+
+.page_spacing {
+  padding: 1rem;
+}
+
+.extra_margin {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.card-body h2 {
+  text-align: center;
+}

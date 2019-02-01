@@ -1,5 +1,20 @@
 .pokemon_card {
   margin-top: 15px;
-  border-color: #3630bf !important;
-  background-color: #f8ba04 !important;
+  border-color: #313131 !important;
+  background-color: #313131 !important;
+}
+
+body {
+  background-color: #313131 !important;
+  color: white;
+}
+
+.trade_red {
+  border-color: red !important;
+  border-width: 4px !important;
+}
+
+.trade_blue {
+  border-color: blue !important;
+  border-width: 4px !important;
 }
