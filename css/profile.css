@@ -1,9 +1,18 @@
 
 .facts_list_blue{
-	border-color: #3630bf;
-	border-width: 2px;
+	border-color: blue;
+  	border-width: 2px;
 }
 .facts_list_red{
-	border-color: #f82e4e;
+	border-color: red;
 	border-width: 2px;
+}
+.profile_card{
+  	border-color: #313131 !important;
+  	background-color: #313131 !important;
+	color:black; !important
+}
+.user_list_black{
+	border-color: #000;
+  	border-width: 1px;
 }_
