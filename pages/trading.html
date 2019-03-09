@@ -4,12 +4,18 @@
 <head>
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link
+  type="text/css"
+  rel="stylesheet"
+  href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"
+/>
 	<link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/trading.css"/>
   <title>Trading</title>
 </head>
 
 <body>
+<div id="tradingApp">
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/index.html">
     <img src="/images/pokeball.png" alt="Home" class="logo_picture">
@@ -38,128 +44,69 @@
     </ul>
   </div>
 </nav>
-	<div class="container">
-		<div class="card pokemon_card">
-      <h1 class="text-center">Trading</h1>
-      <em class="text-center">Here is where you can trade Pokemon with other users!</em>
-			<!-- <img class="card-image-top" src="" alt="Insert Picture here"> -->
-			<div class="container">
-			<div class="row page_spacing">
-				<div class="col-lg col-m">
-          <h2 class="text-center extra_margin">Pokemon to Trade</h2>
-          <div class="trading_area container overflow-auto">
-            <div class="row">
-              <div class="col-sm">
-                <div class="card trade_red trading_card">
-                  <img src="/images/cloyster.png" class="card-img-top" alt="Picture of Pokemon">
-                  <div class="card-body">
-                    <h2>Cloyster</h2>
-                    <p>Combat Power:2110</p>
-                    <p>Type:Ice/Water</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm">
-                <div class="trading_card trade_red card">
-                  <img src="/images/pikachu.png" class="card-img-top" alt="Picture of Pokemon">
-                  <div class="card-body">
-                    <h2>Pikachu</h2>
-                    <p>Combat Power: 619</p>
-                    <p>Type: Electric</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm">
-                <div class="card trade_red trading_card">
-                  <img src="/images/gengar.png" class="card-img-top" alt="Picture of Pokemon">
-                  <div class="card-body">
-                    <h2>Gengar</h2>
-                    <p>Combat Power: 1825</p>
-                    <p>Type: Poison/Ghost</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm">
-                <div class="card trade_red trading_card">
-                  <img src="/images/minun.png" class="card-img-top" alt="Picture of Pokemon">
-                  <div class="card-body">
-                    <h2>Minun</h2>
-                    <p>Combat Power: 1142</p>
-                    <p>Type: Electric</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-				</div>
-				<div class="col-lg">
-          <h2 class="text-center extra_margin">Billy's Pokemon</h2>
-          <div class="trading_area container overflow-auto">
-            <div class="row">
-              <div class="col-sm">
-                <div class="card trade_blue trading_card">
-                  <img src="/images/raticate.png" class="card-img-top" alt="Picture of Pokemon">
-                  <div class="card-body">
-                    <h2>Raticate</h2>
-                    <p>Combat Power: 1261</p>
-                    <p>Type: Normal</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm">
-                <div class="trading_card trade_blue card">
-                  <img src="/images/gengar.png" class="card-img-top" alt="Picture of Pokemon">
-                  <div class="card-body">
-                    <h2>Gengar</h2>
-                    <p>Combat Power: 1825</p>
-                    <p>Type: Poison/Ghost</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm">
-                <div class="card trade_blue trading_card">
-                  <img src="/images/pikachu.png" class="card-img-top" alt="Picture of Pokemon">
-                  <div class="card-body">
-                    <h2>Pikachu</h2>
-                    <p>Combat Power: 619</p>
-                    <p>Type: Electric</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm">
-                <div class="card trade_blue trading_card">
-                  <img src="/images/minun.png" class="card-img-top" alt="Picture of Pokemon">
-                  <div class="card-body">
-                    <h2>Minun</h2>
-                    <p>Combat Power: 1142</p>
-                    <p>Type: Electric</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-				</div>
+	<b-container>
+		<b-card title="Trading" class="pokemon_card">
+			<b-card-text>
+      			<em class="text-center">Here is where you can trade Pokemon with other users!</em>
+			</b-card-text>
+			<b-form @submit="addCard">
+			<b-form-group 	id="buildpokemon" 
+				label="Please add your tradable Pokemon"
+			>
+				<b-row>	
+					<b-col lg="4" class="my-2">
+						<b-form-select v-model="selected" :options="pokemonList" required />
+					</b-col>
+					<b-col lg="3" class="my-2">
+						<b-form-input v-model="cp" placeholder="Enter your pokemons CP" required />
+					</b-col>
+					<b-col lg="4" class="my-2">
+						<b-form-input v-model="locCaught" placeholder="Where was your pokemon caught?"  />
+					</b-col>
+				</b-row>
+				<b-row class="my-2 ml-1">
+					<b-button variant="dark" type="submit">Submit</b-button>
+				</b-row>
+			</b-form-group>
+			</b-form>
+            	<b-row>
+					<b-col>
+					<p> Your Pokemon </p>
+          	<div class="trading_area overflow-auto">
+						<b-row>
+						<div v-for="poke in pokemonCards">
+							<poke-card :poke="poke" color="red"></poke-card>
+						</div>
+						</b-row>
 			</div>
+					</b-col>
+					<b-col>
+					<p> Bob's Pokemon </p>
+          	<div class="trading_area overflow-auto">
+						<b-row>
+						<div v-for="poke in pokemonTrade">
+							<poke-card :poke="poke" color="blue"></poke-card>
+						</div>
+						</b-row>
 			</div>
-		</div>
-	</div>
-
-<footer class="footer">
-	<div class="container">
+					</b-col>
+				</b-row>
+		</b-card>
+	</b-container>
+	<div class="footer">
 		<div class="row justify-content-center">
 			<a href="https://github.com/cbminor/creativeproject1"> My Github </a>
 		</div>
 	</div>
-</footer>
 
-
+</div>
   <!-- Boostrap Files -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+<script src="//unpkg.com/@babel/polyfill@latest/dist/polyfill.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.2/dist/vue.js"></script>
+<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+<script src="../scripts/trading.js"></script>
 </body>
 </html>
