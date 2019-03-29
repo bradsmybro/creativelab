@@ -5,7 +5,7 @@ Vue.component('poke-card', {
 	},
 	data: function() {
 		return {
-			
+			idNum: this.poke._id,	
 		}
 	},
 	computed: {
@@ -13,48 +13,185 @@ Vue.component('poke-card', {
 			return "card trading_card" + " trade_" + this.color	
 		},
 	},	
-	template: `
-		
-			<b-col>
+	methods: {
+		selectCard() {
+			console.log("Card selected ")
+			if(this.color = "red"){
+				this.$emit('edit-poke', this.poke)
+				this.$root.$emit('bv::show::modal', 'modal-1')
+			}	
+			else{
+				console.log("Other trainers pokeon selected")
+			}
+		},
+	},
+	template: `	
+			<b-col href="#" v-on:click="selectCard">
 				<div :class="colorClass">
-					<img :src="poke.pic" class="card-img-top" alt="Picture of Pokemon">
+					<img :src="poke.path" class="card-img-top" alt="Picture of Pokemon">
 					<div class="card-body">
-						<h2>{{poke.name}}</h2>
+						<h2>{{poke.poke}}</h2>
 						<p>Combat Power: {{poke.cp}}</p>
 						<p>Type:<span v-for="type in poke.type"> {{type}}</span> </p>
-						<p v-if='poke.location != ""'>Place Caught: {{poke.location}} </p>
+						<p v-if='poke.caught != ""'>Place Caught: {{poke.caught}} </p>
 					</div>
 				</div>
 			</b-col>
 	`
 })
+Vue.component('poke-edit', {
+	props: {
+		poke: Object,
+		color: ""
+	},
+	data: function() {
+		return {
+			place: "",
+			combat: "",
+		}
+	},
+	computed: {
+		colorClass() {
+			return "card trading_card" + " trade_" + this.color	
+		},
+		caught: {
+			get(){
+				if(this.place == ""){
+					return this.poke.caught
+				}
+				else{
+					return this.place
+				}
+			},
+			set(val){
+				this.place = val
+			},
+		},
+		cp: {
+			get(){
+				if(this.combat == ""){
+					return this.poke.cp
+				}
+				else{
+					return this.combat
+				}
+			},
+			set(val){
+				this.combat= val
+			}
+		},
+		idNum() {
+			return this.poke._id
+		},
+	},	
+	methods: {
+	   	async deletePoke() {
+			console.log("delete")
+			let that = this
+      		try {
+        		let response = await axios.delete("/api/pokemon/" + that.idNum);
+				that.combat = ""
+				that.place = ""
+        		that.$emit('get-poke');
+				this.$root.$emit('bv::hide::modal', 'modal-1')
+        		return true;
+      		} catch (error) {
+        		console.log(error);
+      		}
+		},
+		async updatePoke(){
+			let that = this
+			console.log("update")
+      		try {
+        		let response = await axios.put("/api/pokemon/" + that.idNum, {
+    				cp : that.cp,
+   					caught : that.caught,
+        		});
+				that.combat = ""
+				that.place = ""
+        		that.$emit('get-poke');
+				that.$root.$emit('bv::hide::modal', 'modal-1')
+				return true
+      		} catch (error) {
+        		console.log(error);
+				return false
+      		}
+		},
+		cancelPoke(){
+			this.$root.$emit('bv::hide::modal', 'modal-1')
+		},
+	},
+	template: `
+	<div>	
+			<b-col>
+				<div :class="colorClass">
+					<img :src="poke.path" class="card-img-top" alt="Picture of Pokemon">
+					<div class="card-body">
+						<h2>{{poke.poke}}</h2>
+						Combat Power: 
+						<b-input v-model="cp" />
+						<p></p>
+						<p>Type:<span v-for="type in poke.type"> {{type}}</span> </p>
+						Place Caught:
+						<b-input v-model="caught" />
+					</div>
+				</div>
+			</b-col>
+					<b-row>
+						<b-col class="text-right">
+						<b-button variant="outline-dark" @click="cancelPoke">Cancel</b-button>	
+						<b-button variant="danger" @click="deletePoke">Delete</b-button>
+						<b-button variant="dark" @click="updatePoke">Update</b-button>	
+						</b-col>
+					</b-row>
+	</div>
+	`
+})
+
 var tradingApp = new Vue({
 	el:'#tradingApp',
 	data: {
 		locCaught: "",
 		cp: "",
+		user: "",
+		users: [
+			{value: "", text: "Please select your account", disabled: true},
+			{value: "Jane", text: "Jane"}, 
+			{value: "John", text: "John"},
+			{value: "Bob", text: "Bob"},
+		],
 		selected: "",
+		editPokemon: {},
+		editPokeName: "",
+		editCp: "",
+		editCaught: "",
 		pokemonTrade: [
 			{
 				"cp": "2210",
-				"location": "Provo, UT",
-				"name": "Marowak",
+				"caught": "Provo, UT",
+				"poke": "Marowak",
 				"type": ["ground"],
-				"pic": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/105.png",
+				"path": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/105.png",
 			},
 			{
 				"cp": "1",
-				"location": "Seoul, Korea",
+				"caught": "Seoul, Korea",
 				"type": ["water"],
-				"name": "Magicarp",
-				"pic": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/129.png"
+				"poke": "Magicarp",
+				"path": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/129.png"
 			},
 		],
 		pokemonList: [],
 		pokemonCards: [], //List of selected pokemon
 	},
+	watch: {
+		user(newUser) {
+			this.getPokemon(newUser)
+		},
+	},
 	created: function(){
 		this.listPokemon();
+	//	this.getPokemon()
 	},
 	methods: {
 		getPokemon(name){
@@ -98,18 +235,52 @@ var tradingApp = new Vue({
 				pic = response.sprites.front_default
 
 				var temp = {
-					"poke": that.selected,
-					"name": that.capitalize(response.forms[0].name),
+					"poke": that.capitalize(response.forms[0].name),
+					"user": that.user,
 					"cp": that.cp,
 					"location": that.locCaught,
 					"type": typeArray,
 					"pic": pic,
 				}
-				that.pokemonCards.push(temp)
+				//call api here?
+			   	that.upload(temp)
+				that.getPokemon(that.user)
+				//that.pokemonCards.push(temp)
 				that.selected = ""
 				that.cp = ""
 				that.locCaught = ""
 			})
+		},
+		async getPokemon() {
+  			try {
+    			let response = await axios.get("/api/pokemon/" + this.user);
+    			this.pokemonCards = response.data;
+				console.log("Got them again!")
+    			return true;
+  			} catch (error) {
+    			console.log(error);
+  			}
+		},
+    	async upload(poke) {
+      		try {
+        		let r1 = await axios.post('/api/addPokemon/trade', {
+          			poke: poke.poke,
+					user: poke.user,
+          			cp: poke.cp,
+					type: poke.type,
+					caught: poke.location,
+					path: poke.pic,
+        		});
+				this.getPokemon()
+				console.log("It has been tried")
+      		} catch (error) {
+        		console.log(error);
+      		}
+    	},
+		editPoke(poke){
+			console.log("Edit the poke!")
+			this.editPokemon = poke
+			this.$root.$emit('bv::show::modal', 'modal-1')
 		},
 		capitalize(string){
 			return string.charAt(0).toUpperCase() + string.slice(1)

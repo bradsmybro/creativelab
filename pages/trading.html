@@ -53,6 +53,11 @@
 			<b-form-group 	id="buildpokemon" 
 				label="Please add your tradable Pokemon"
 			>
+				<b-row>
+					<b-col lg="4">
+						<b-form-select v-model="user" :options="users" placeholder="Enter Username" />
+					</b-col> 
+				</b-row>
 				<b-row>	
 					<b-col lg="4" class="my-2">
 						<b-form-select v-model="selected" :options="pokemonList" required />
@@ -75,7 +80,7 @@
           	<div class="trading_area overflow-auto">
 						<b-row>
 						<div v-for="poke in pokemonCards">
-							<poke-card :poke="poke" color="red"></poke-card>
+							<poke-card v-on:edit-poke="editPoke" :poke="poke" color="red"></poke-card>
 						</div>
 						</b-row>
 			</div>
@@ -92,6 +97,12 @@
 					</b-col>
 				</b-row>
 		</b-card>
+		<div class="trading_area">
+			 	<!-- Modal Component -->
+  			<b-modal ref="editModal" id="modal-1" :hide-footer="true" title="Edit Pokemon Entry">
+				<poke-edit @get-poke="getPokemon" :poke="editPokemon" color="red"/>
+  			</b-modal>
+		</div>
 	</b-container>
 	<div class="footer">
 		<div class="row justify-content-center">
@@ -102,6 +113,7 @@
 </div>
   <!-- Boostrap Files -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 <script src="//unpkg.com/@babel/polyfill@latest/dist/polyfill.min.js"></script>
